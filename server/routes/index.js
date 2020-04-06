@@ -3,8 +3,8 @@ const route = express.Router()
 const userroute = require('./userRoute')
 const foodroute = require('./foodRoute')
 
-route.use('/user', userroute)
-route.use('/food', foodroute)
+route.use('/', userroute)
+route.use('/foods', foodroute)
 
 
 module.exports = route

@@ -1,8 +1,10 @@
 const express = require('express')
 const route = express.Router()
-const userroute = require('./userRoute')
+const ctr = require('../controllers/userCtrl')
 
-route.use('/user', userroute)
+
+route.post('/register', ctr.register)
+route.post('/login', ctr.login)
 
 
 module.exports = route
