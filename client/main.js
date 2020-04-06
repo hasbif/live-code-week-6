@@ -30,17 +30,19 @@ $(document).ready(function () {
         const price = $('#price').val()
         const ingredients = $('#ingredients').val()
         const tag = $('#tag').val()
+        console.log(title, price, ingredients, tag)
         $.ajax({
             url: 'http://localhost:3000/foods',
             type: 'POST',
-            body: { title, price, ingredients, tag },
+            data: { title, price, ingredients, tag, test: 'test' },
             headers: {
-                access_token: localStorage.access_token
+                access_token: localStorage.getItem('access_token')
             }
         }).done(data => {
-            refreshPage()
+            // refreshPage()
             console.log('added')
         }).fail(err => {
+            //Cannot set headers after they are sent to the client
             console.log(err)
         })
     })
@@ -59,6 +61,45 @@ $(document).ready(function () {
 
 })
 
+function showAll() {
+    $.ajax({
+        url: 'http://localhost:3000/foods',
+        type: 'GET',
+        headers: {
+            access_token: localStorage.getItem('access_token')
+        }
+    }).done(respond => {
+        console.log(respond)
+        let foods = respond.data
+        $('#list').html('')
+        for (let i in foods) {
+            $('#list').append(`<div class="card">
+                <div class="card-body pb-0">
+                    <div class="d-flex justify-content-between mb-0">
+                        <div class="col-9">
+                            <h5 class="font-weight-bold">${foods[i].title} </h5>
+                            <p>${foods[i].price}</p>
+                        </div>
+                        <div class="col-3 d-flex align-items-baseline">
+                            <i class="fas fa-tag text-grey mr-2"></i>
+                            <p class="text-grey">${foods[i].tag}</p>
+                            <button class="fas fa-trash text-danger ml-auto cursor-pointer" value="${foods[i].id}"></button>
+                        </div>
+                    </div>
+                    <div class="card-body border-bottom">
+                    ${foods[i].ingredients}
+              </div>
+
+                </div>
+            </div>`)
+        }
+
+
+    }).fail(err => {
+        console.log(err)
+    })
+}
+
 function refreshPage() {
     if (localStorage.access_token) {
         $('#app').show()
@@ -67,4 +108,5 @@ function refreshPage() {
         $('#login').show()
         $('#app').hide()
     }
+    showAll()
 }

@@ -4,13 +4,12 @@ var jwt = require('jsonwebtoken');
 
 class OA {
     static authenticate(req, res, next) {
-        console.log('authen', req.headers.access_token)
         let token = req.headers.access_token
         if (token) {
             var decoded = jwt.verify(token, process.env.SECRET);
-            console.log(decoded, 'decodedddd')
+            // console.log(decoded, 'decodedddd')
             req.userId = decoded.userId
-            console.log(req.userId)
+            // console.log(req.userId)
             next()
         } else {
             res.status(400).json({ msg: 'log in first' })
@@ -18,6 +17,19 @@ class OA {
     }
 
     static autherize(req, res, next) {
+        Food.findByPk(req.params.id)
+            .done(found => {
+                if (found) {
+                    if (found.UserId == req.userId) {
+                        next()
+                    } else {
+                        res.status(400).json({ msg: 'access denied' })
+                    }
+
+                } else {
+                    res.status(404).json({ msg: 'data not found' })
+                }
+            })
 
     }
 }
