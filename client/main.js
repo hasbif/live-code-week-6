@@ -12,6 +12,7 @@ $(document).ready(function () {
             data: { email, password }
         }).done(respond => {
             localStorage.setItem('access_token', respond.access_token);
+            $('#loginform')[0].reset()
             refreshPage()
         }).fail(err => {
             console.log(err)
@@ -39,12 +40,36 @@ $(document).ready(function () {
                 access_token: localStorage.getItem('access_token')
             }
         }).done(data => {
-            // refreshPage()
+            $('#addform')[0].reset()
+            refreshPage()
             console.log('added')
         }).fail(err => {
             //Cannot set headers after they are sent to the client
             console.log(err)
         })
+    })
+
+
+    $('#list').on('click', '#delete', function (e) {
+        //delete berfungsi, dapatin idnya salah, sama semua
+        e.preventDefault()
+        let id = $('#delete').val()
+        console.log(id)
+        $.ajax({
+            url: `http://localhost:3000/foods/${id}`,
+            type: 'DELETE',
+            headers: {
+                access_token: localStorage.getItem('access_token')
+            }
+        }).done(respond => {
+            console.log('deleted')
+            refreshPage()
+
+        }).fail(err => {
+            console.log(err)
+        })
+
+
     })
 
 
@@ -83,7 +108,7 @@ function showAll() {
                         <div class="col-3 d-flex align-items-baseline">
                             <i class="fas fa-tag text-grey mr-2"></i>
                             <p class="text-grey">${foods[i].tag}</p>
-                            <button class="fas fa-trash text-danger ml-auto cursor-pointer" value="${foods[i].id}"></button>
+                            <button id="delete" class="fas fa-trash text-danger ml-auto cursor-pointer delete" value="${foods[i].id}"></button>
                         </div>
                     </div>
                     <div class="card-body border-bottom">

@@ -27,12 +27,16 @@ class FoodCtrl {
     }
 
     static delete(req, res) {
-        Food.destroy({ where: { id: req.param.id } })
+
+        Food.destroy({ where: { id: req.params.id } })
+            // Food.destroy({ where: { id: req.params.id } })
             .then(data => {
-                res.status(200).json({})
+                res.status(200).json({ data })
             }).catch(err => {
                 res.status(500).json({ err })
             })
+
+
 
     }
 }

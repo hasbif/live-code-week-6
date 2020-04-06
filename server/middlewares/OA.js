@@ -17,10 +17,12 @@ class OA {
     }
 
     static autherize(req, res, next) {
+        console.log('in autherize')
         Food.findByPk(req.params.id)
             .done(found => {
                 if (found) {
                     if (found.UserId == req.userId) {
+                        console.log('autherized')
                         next()
                     } else {
                         res.status(400).json({ msg: 'access denied' })
